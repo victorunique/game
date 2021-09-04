@@ -25,11 +25,9 @@ public class HUD {
     g.setColor(Color.white);
     g.drawRect(15, 15, 200, 32);
 
-    long ts = System.currentTimeMillis();
+    // very slow during the initialization (loading fonts)
     g.drawString("Score: " + score, 15, 64);
-    System.out.println("After first drawString: " + (System.currentTimeMillis() - ts));
     g.drawString("Level: " + level, 15, 80);
-    System.out.println("After second drawString: " + (System.currentTimeMillis() - ts));
   }
 
   public int getScore() {
