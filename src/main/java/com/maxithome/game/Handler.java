@@ -28,13 +28,20 @@ public class Handler {
     this.objects.remove(object);
   }
 
-  public void clearEnemies() {
+  public void clearEnemies(boolean isEnd) {
     for(int i = 0; i < objects.size(); ++i) {
       GameObject obj = objects.get(i);
-      if(obj.getId() != ID.Player) {
+      if(isEnd) {
+        removeObject(obj);
+        i--;
+      } else if(obj.getId() != ID.Player) {
         removeObject(obj);
         i--;
       }
     }
+  }
+
+  public void clearEnemies() {
+    this.clearEnemies(false);
   }
 }

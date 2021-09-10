@@ -19,20 +19,22 @@ public class Game extends Canvas implements Runnable {
     Menu,
     Help,
     Game,
+    End,
   }
 
   public STATE gameState = STATE.Menu;
 
   public Game() {
     handler = new Handler();
-    menu = new Menu(this, handler);
+    hud = new HUD();
+    menu = new Menu(this, handler, hud);
     this.addKeyListener(new KeyInput(handler));
     this.addMouseListener(menu);
 
     r = new Random(System.currentTimeMillis());
     new Window(WIDTH, HEIGHT, "Let's Build a Game!", this);
 
-    hud = new HUD();
+
     spawner = new Spawn(handler, hud);
 
 
@@ -40,6 +42,11 @@ public class Game extends Canvas implements Runnable {
     //  handler.addObject(new Player(WIDTH / 2 - 32, HEIGHT / 2 - 32, ID.Player, handler));
     //  handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH), r.nextInt(Game.HEIGHT), ID.BasicEnemy, handler));
     //}
+    if(gameState != STATE.Game) {
+      for (int i = 0; i < 10; ++i) {
+        handler.addObject(new MenuParticle(r.nextInt(Game.WIDTH), r.nextInt(Game.HEIGHT), ID.MenuParticle, handler));
+      }
+    }
   }
 
   public synchronized void start() {
@@ -97,7 +104,15 @@ public class Game extends Canvas implements Runnable {
     if(gameState == STATE.Game) {
       this.hud.tick();
       this.spawner.tick();
-    } else if(gameState == STATE.Menu) {
+      if(HUD.HEALTH <= 0) {
+        HUD.HEALTH = 100;
+        gameState = STATE.End;
+        handler.clearEnemies(true);
+        for (int i = 0; i < 10; ++i) {
+          handler.addObject(new MenuParticle(r.nextInt(Game.WIDTH), r.nextInt(Game.HEIGHT), ID.MenuParticle, handler));
+        }
+      }
+    } else if(gameState == STATE.Menu || gameState == STATE.End) {
       this.menu.tick();
     }
   }
@@ -118,7 +133,7 @@ public class Game extends Canvas implements Runnable {
 
     if(gameState == STATE.Game) {
       this.hud.render(g);
-    } else if(gameState == STATE.Menu || gameState == STATE.Help) {
+    } else if(gameState == STATE.Menu || gameState == STATE.Help || gameState == STATE.End) {
       this.menu.render(g);
     }
 
