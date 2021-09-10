@@ -1,10 +1,10 @@
 package com.maxithome.game;
 
 public enum ID {
-  Player{},
-  BasicEnemy{},
-  FastEnemy{},
-  SmartEnemy{},
-  EnemyBoss{},
-  Trail{},
+  Player,
+  BasicEnemy,
+  FastEnemy,
+  SmartEnemy,
+  EnemyBoss,
+  Trail,
 }

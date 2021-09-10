@@ -13,19 +13,33 @@ public class Game extends Canvas implements Runnable {
   private Random r;
   private HUD hud;
   private Spawn spawner;
+  private Menu menu;
+
+  public enum STATE {
+    Menu,
+    Help,
+    Game,
+  }
+
+  public STATE gameState = STATE.Menu;
 
   public Game() {
     handler = new Handler();
+    menu = new Menu(this, handler);
     this.addKeyListener(new KeyInput(handler));
+    this.addMouseListener(menu);
+
     r = new Random(System.currentTimeMillis());
     new Window(WIDTH, HEIGHT, "Let's Build a Game!", this);
 
     hud = new HUD();
     spawner = new Spawn(handler, hud);
 
-    handler.addObject(new Player(WIDTH / 2 - 32, HEIGHT / 2 - 32, ID.Player, handler));
 
-    handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH), r.nextInt(Game.HEIGHT), ID.BasicEnemy, handler));
+    //if(gameState == STATE.Game) {
+    //  handler.addObject(new Player(WIDTH / 2 - 32, HEIGHT / 2 - 32, ID.Player, handler));
+    //  handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH), r.nextInt(Game.HEIGHT), ID.BasicEnemy, handler));
+    //}
   }
 
   public synchronized void start() {
@@ -79,8 +93,13 @@ public class Game extends Canvas implements Runnable {
 
   private void tick() {
     this.handler.tick();
-    this.hud.tick();
-    this.spawner.tick();
+
+    if(gameState == STATE.Game) {
+      this.hud.tick();
+      this.spawner.tick();
+    } else if(gameState == STATE.Menu) {
+      this.menu.tick();
+    }
   }
 
   private void render() {
@@ -96,7 +115,12 @@ public class Game extends Canvas implements Runnable {
     g.fillRect(0, 0, WIDTH, HEIGHT);
 
     this.handler.render(g);
-    this.hud.render(g);
+
+    if(gameState == STATE.Game) {
+      this.hud.render(g);
+    } else if(gameState == STATE.Menu || gameState == STATE.Help) {
+      this.menu.render(g);
+    }
 
     g.dispose();
     bs.show();
