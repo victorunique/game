@@ -7,8 +7,11 @@ public class KeyInput extends KeyAdapter {
   private Handler handler;
   private boolean[] keyDown = new boolean[4];
 
-  public KeyInput(Handler handler) {
+  private Game game;
+
+  public KeyInput(Handler handler, Game game) {
     this.handler = handler;
+    this.game = game;
 
     keyDown[0] = false;
     keyDown[1] = false;
@@ -41,6 +44,12 @@ public class KeyInput extends KeyAdapter {
           object.setVelX(-5);
           keyDown[3] = true;
         }
+      }
+    }
+
+    if(key == KeyEvent.VK_P) {
+      if(game.gameState == Game.STATE.Game) {
+        Game.paused = !Game.paused;
       }
     }
 

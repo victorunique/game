@@ -24,15 +24,18 @@ public class Menu extends MouseAdapter {
     if(game.gameState == Game.STATE.Menu) {
       // Play button
       if(mouseOver(mx, my, 210, 150, 200, 64)) {
-        game.gameState = Game.STATE.Game;
-        handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT / 2 - 32, ID.Player, handler));
-        handler.clearEnemies();
-        handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH), r.nextInt(Game.HEIGHT), ID.BasicEnemy, handler));
+        //game.gameState = Game.STATE.Game;
+        //handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT / 2 - 32, ID.Player, handler));
+        //handler.clearEnemies();
+        //handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH), r.nextInt(Game.HEIGHT), ID.BasicEnemy, handler));
+        game.gameState = Game.STATE.Select;
+        return;
       }
 
       // Help button
       if(mouseOver(mx, my, 210, 250, 200, 64)) {
         game.gameState = Game.STATE.Help;
+        return;
       }
 
       // Quit button
@@ -41,22 +44,49 @@ public class Menu extends MouseAdapter {
       }
     }
 
+    if(game.gameState == Game.STATE.Select) {
+      // Normal button
+      if(mouseOver(mx, my, 210, 150, 200, 64)) {
+        game.gameState = Game.STATE.Game;
+        handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT / 2 - 32, ID.Player, handler));
+        handler.clearEnemies();
+        handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH), r.nextInt(Game.HEIGHT), ID.BasicEnemy, handler));
+        game.diff = 0;
+        return;
+      }
+
+      // Hard button
+      if(mouseOver(mx, my, 210, 250, 200, 64)) {
+        game.gameState = Game.STATE.Game;
+        handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT / 2 - 32, ID.Player, handler));
+        handler.clearEnemies();
+        handler.addObject(new HardEnemy(r.nextInt(Game.WIDTH), r.nextInt(Game.HEIGHT), ID.BasicEnemy, handler));
+        game.diff = 1;
+        return;
+      }
+
+      // Back button
+      if(mouseOver(mx, my, 210, 350, 200, 64)) {
+        game.gameState = Game.STATE.Menu;
+        return;
+      }
+    }
+
     // Back button for Help
     if(game.gameState == Game.STATE.Help) {
       if(mouseOver(mx, my, 210, 350, 200, 64)) {
         game.gameState = Game.STATE.Menu;
+        return;
       }
     }
 
     // Try Again button for Game Over
     if(game.gameState == Game.STATE.End) {
       if(mouseOver(mx, my, 210, 350, 200, 64)) {
-        game.gameState = Game.STATE.Game;
+        game.gameState = Game.STATE.Menu;
         hud.setScore(0);
         hud.setLevel(1);
-        handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT / 2 - 32, ID.Player, handler));
-        handler.clearEnemies();
-        handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH), r.nextInt(Game.HEIGHT), ID.BasicEnemy, handler));
+        return;
       }
     }
   }
@@ -125,6 +155,23 @@ public class Menu extends MouseAdapter {
       g.setFont(fnt2);
       g.drawRect(210, 350, 200, 64);
       g.drawString("Try Again", 245, 390);
+    } else if(game.gameState == Game.STATE.Select) {
+      Font fnt = new Font("arial", 1, 50);
+      Font fnt2 = new Font("arial", 1, 30);
+
+      g.setFont(fnt);
+      g.setColor(Color.white);
+      g.drawString("SELECT DIFFICULTY", 70, 70);
+
+      g.setFont(fnt2);
+      g.drawRect(210, 150, 200, 64);
+      g.drawString("Normal", 270, 190);
+
+      g.drawRect(210, 250, 200, 64);
+      g.drawString("Hard", 270, 290);
+
+      g.drawRect(210, 350, 200, 64);
+      g.drawString("Back", 270, 390);
     }
   }
 }
