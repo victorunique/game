@@ -23,25 +23,26 @@ public class KeyInput extends KeyAdapter {
   public void keyPressed(KeyEvent e) {
     int key = e.getKeyCode();
 
-    for(GameObject object : handler.objects) {
+    for(int i = 0; i < handler.objects.size(); ++i) {
+      GameObject object = handler.objects.get(i);
       if(object.id == ID.Player) {
         if(key == KeyEvent.VK_W) {
-          object.setVelY(-5);
+          object.setVelY(-handler.spd);
           keyDown[0] = true;
         }
 
         if(key == KeyEvent.VK_S) {
-          object.setVelY(5);
+          object.setVelY(handler.spd);
           keyDown[1] = true;
         }
 
         if(key == KeyEvent.VK_D) {
-          object.setVelX(5);
+          object.setVelX(handler.spd);
           keyDown[2] = true;
         }
 
         if(key == KeyEvent.VK_A) {
-          object.setVelX(-5);
+          object.setVelX(-handler.spd);
           keyDown[3] = true;
         }
       }
@@ -56,13 +57,22 @@ public class KeyInput extends KeyAdapter {
     if(key == KeyEvent.VK_ESCAPE) {
       System.exit(0);
     }
+
+    if(key == KeyEvent.VK_SPACE) {
+      if(game.gameState == Game.STATE.Game) {
+        game.gameState = Game.STATE.Shop;
+      } else if(game.gameState == Game.STATE.Shop){
+        game.gameState = Game.STATE.Game;
+      }
+    }
   }
 
   @Override
   public void keyReleased(KeyEvent e) {
     int key = e.getKeyCode();
 
-    for(GameObject object : handler.objects) {
+    for(int i = 0; i < handler.objects.size(); ++i) {
+      GameObject object = handler.objects.get(i);
       if(object.id == ID.Player) {
         if(key == KeyEvent.VK_W) keyDown[0] = false;
         if(key == KeyEvent.VK_S) keyDown[1] = false;

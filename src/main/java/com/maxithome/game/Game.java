@@ -14,6 +14,7 @@ public class Game extends Canvas implements Runnable {
   private HUD hud;
   private Spawn spawner;
   private Menu menu;
+  private Shop shop;
 
   public static boolean paused = false;
   public int diff = 0;    // 0 = Normal; 1 = Hard;
@@ -22,6 +23,7 @@ public class Game extends Canvas implements Runnable {
     Menu,
     Select,
     Help,
+    Shop,
     Game,
     End,
   }
@@ -31,9 +33,11 @@ public class Game extends Canvas implements Runnable {
   public Game() {
     handler = new Handler();
     hud = new HUD();
+    shop = new Shop(handler, hud, this);
     menu = new Menu(this, handler, hud);
     this.addKeyListener(new KeyInput(handler, this));
     this.addMouseListener(menu);
+    this.addMouseListener(shop);
 
     r = new Random(System.currentTimeMillis());
     new Window(WIDTH, HEIGHT, "Let's Build a Game!", this);
@@ -138,8 +142,6 @@ public class Game extends Canvas implements Runnable {
     g.setColor(Color.black);
     g.fillRect(0, 0, WIDTH, HEIGHT);
 
-    this.handler.render(g);
-
     if(paused) {
       g.setColor(Color.white);
       g.drawString("PAUSED", 100, 100);
@@ -147,8 +149,12 @@ public class Game extends Canvas implements Runnable {
 
     if(gameState == STATE.Game) {
       this.hud.render(g);
+      this.handler.render(g);
+    } else if(gameState == STATE.Shop) {
+      this.shop.render(g);
     } else if(gameState == STATE.Menu || gameState == STATE.Help || gameState == STATE.End || gameState == STATE.Select) {
       this.menu.render(g);
+      this.handler.render(g);
     }
 
     g.dispose();
